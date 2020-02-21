@@ -4,7 +4,7 @@ import store from "./store";
 
 import api from "./api";
 
-const generateItemElement = function (item) {
+const generateItemElement = function(item) {
   let itemTitle = `<span class="shopping-item shopping-item__checked">${item.name}</span>`;
   if (!item.checked) {
     itemTitle = `
@@ -28,12 +28,12 @@ const generateItemElement = function (item) {
     </li>`;
 };
 
-const generateShoppingItemsString = function (shoppingList) {
+const generateShoppingItemsString = function(shoppingList) {
   const items = shoppingList.map(item => generateItemElement(item));
   return items.join("");
 };
 
-const generateError = (message) => {
+const generateError = message => {
   return `
     <section class="error-content">
         <button id="cancel-error">X</button>
@@ -45,20 +45,20 @@ const generateError = (message) => {
 const renderError = () => {
   if (store.error) {
     const el = generateError(store.error);
-    $('.error-container').html(el);
+    $(".error-container").html(el);
   } else {
-    $('.error-container').empty();
+    $(".error-container").empty();
   }
 };
 
 const handleCloseError = () => {
-  $('.error-container').on('click', '#cancel-error', () => {
+  $(".error-container").on("click", "#cancel-error", () => {
     store.setError(null);
     renderError();
   });
 };
 
-const render = function () {
+const render = function() {
   // Filter item list if store prop is true by item.checked === false
   renderError();
   let items = [...store.items];
@@ -73,19 +73,18 @@ const render = function () {
   $(".js-shopping-list").html(shoppingListItemsString);
 };
 
-const handleNewItemSubmit = function () {
-  $("#js-shopping-list-form").submit(function (event) {
+const handleNewItemSubmit = function() {
+  $("#js-shopping-list-form").submit(function(event) {
     event.preventDefault();
     const newItemName = $(".js-shopping-list-entry").val();
     $(".js-shopping-list-entry").val("");
     api
       .createItem(newItemName)
-      .then(res => res.json())
       .then(newItem => {
         store.addItem(newItem);
         render();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
         store.setError(error.message);
         renderError();
@@ -93,7 +92,7 @@ const handleNewItemSubmit = function () {
   });
 };
 
-const getItemIdFromElement = function (item) {
+const getItemIdFromElement = function(item) {
   return $(item)
     .closest(".js-item-element")
     .data("item-id");
@@ -103,12 +102,13 @@ const handleDeleteItemClicked = () => {
   $(".js-shopping-list").on("click", ".js-item-delete", event => {
     event.preventDefault();
     const id = getItemIdFromElement(event.currentTarget);
-    api.deleteItem(id)
-      .then(function () {
+    api
+      .deleteItem(id)
+      .then(function() {
         store.findAndDelete(id);
         render();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
         store.setError(error.message);
         renderError();
@@ -116,19 +116,20 @@ const handleDeleteItemClicked = () => {
   });
 };
 
-const handleEditShoppingItemSubmit = function () {
+const handleEditShoppingItemSubmit = function() {
   $(".js-shopping-list").on("submit", ".js-edit-item", event => {
     event.preventDefault();
     const id = getItemIdFromElement(event.currentTarget);
     const itemName = $(event.currentTarget)
       .find(".shopping-item")
       .val();
-    api.updateItem(id, { name: itemName })
+    api
+      .updateItem(id, { name: itemName })
       .then(() => {
         store.findAndUpdate(id, { name: itemName });
         render();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
         store.setError(error.message);
         renderError();
@@ -136,7 +137,7 @@ const handleEditShoppingItemSubmit = function () {
   });
 };
 
-const handleItemCheckClicked = function () {
+const handleItemCheckClicked = function() {
   $(".js-shopping-list").on("click", ".js-item-toggle", event => {
     const id = getItemIdFromElement(event.currentTarget);
     const item = store.findById(id);
@@ -147,7 +148,7 @@ const handleItemCheckClicked = function () {
         store.findAndUpdate(id, { checked: !item.checked });
         render();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
         store.setError(error.message);
         renderError();
@@ -155,14 +156,14 @@ const handleItemCheckClicked = function () {
   });
 };
 
-const handleToggleFilterClick = function () {
+const handleToggleFilterClick = function() {
   $(".js-filter-checked").click(() => {
     store.toggleCheckedFilter();
     render();
   });
 };
 
-const bindEventListeners = function () {
+const bindEventListeners = function() {
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();

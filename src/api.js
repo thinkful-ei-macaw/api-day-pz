@@ -1,11 +1,11 @@
 const BASE_URL = "https://thinkful-list-api.herokuapp.com/zacbarreca";
-const listApiFetch = function (...args) {
+const listApiFetch = function(...args) {
   let error;
-  return listApiFetch(...args)
+  return fetch(...args)
     .then(res => {
       if (!res.ok) {
         error = { code: res.status };
-        if (!res.headers.get('content-type').includes('json')) {
+        if (!res.headers.get("content-type").includes("json")) {
           error.message = res.statusText;
           return Promise.reject(error);
         }
@@ -36,19 +36,21 @@ const createItem = name => {
   });
 };
 
-const updateItem = (id, updateData) => {
+const updateItem = function(id, updateData) {
+  const newData = JSON.stringify(updateData);
   return listApiFetch(`${BASE_URL}/items/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updateData)
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: newData
   });
 };
 
 const deleteItem = id => {
-  return listApiFetch(`${BASE_URL}/items/${id}`,
-    {
-      method: "DELETE"
-    });
+  return listApiFetch(`${BASE_URL}/items/${id}`, {
+    method: "DELETE"
+  });
 };
 
 export default {

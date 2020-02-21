@@ -5,14 +5,11 @@ import shoppingList from "./shopping-list";
 import api from "./api";
 import store from "./store";
 
-const main = function () {
-  api
-    .getItems()
-    .then(res => res.json())
-    .then(items => {
-      items.forEach(item => store.addItem(item));
-      shoppingList.render();
-    });
+const main = function() {
+  api.getItems().then(items => {
+    items.forEach(item => store.addItem(item));
+    shoppingList.render();
+  });
   shoppingList.bindEventListeners();
   shoppingList.render();
 };
