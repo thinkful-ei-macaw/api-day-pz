@@ -5,7 +5,7 @@ import shoppingList from "./shopping-list";
 import api from "./api";
 import store from "./store";
 
-const main = function() {
+const main = function () {
   api
     .getItems()
     .then(res => res.json())

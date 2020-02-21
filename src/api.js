@@ -23,8 +23,16 @@ const updateItem = (id, updateData) => {
   });
 };
 
+const deleteItem = id => {
+  return fetch(`${BASE_URL}/items/${id}`,
+    {
+      method: "DELETE"
+    });
+};
+
 export default {
   getItems,
   createItem,
-  updateItem
+  updateItem,
+  deleteItem
 };
